@@ -1,0 +1,135 @@
+{
+  "site": {
+    "title": "My Dashboard",
+    "subtitle": "Personal Home Page",
+    "footer": "My Dashboard — Personal Home Page"
+  },
+  "sections": [
+    {
+      "title": "External",
+      "title_suffix": "Sites",
+      "type": "external",
+      "cards": [
+        {
+          "title": "Search",
+          "icon": "fa-solid fa-magnifying-glass",
+          "links": [
+            {
+              "label": "Google",
+              "url": "https://www.google.com",
+              "icon": "fa-brands fa-google"
+            },
+            {
+              "label": "DuckDuckGo",
+              "url": "https://duckduckgo.com",
+              "icon": "fa-solid fa-magnifying-glass"
+            }
+          ]
+        },
+        {
+          "title": "Email",
+          "icon": "fa-solid fa-envelope",
+          "links": [
+            {
+              "label": "Gmail",
+              "url": "https://mail.google.com",
+              "icon": "fa-brands fa-google"
+            }
+          ]
+        },
+        {
+          "title": "Social",
+          "icon": "fa-solid fa-users",
+          "links": [
+            {
+              "label": "Reddit",
+              "url": "https://www.reddit.com",
+              "icon": "fa-brands fa-reddit"
+            },
+            {
+              "label": "X (Twitter)",
+              "url": "https://x.com",
+              "icon": "fa-brands fa-x-twitter"
+            },
+            {
+              "label": "LinkedIn",
+              "url": "https://www.linkedin.com",
+              "icon": "fa-brands fa-linkedin"
+            }
+          ]
+        },
+        {
+          "title": "Development",
+          "icon": "fa-solid fa-code",
+          "links": [
+            {
+              "label": "GitHub",
+              "url": "https://github.com",
+              "icon": "fa-brands fa-github"
+            },
+            {
+              "label": "Stack Overflow",
+              "url": "https://stackoverflow.com",
+              "icon": "fa-brands fa-stack-overflow"
+            },
+            {
+              "label": "MDN Web Docs",
+              "url": "https://developer.mozilla.org",
+              "icon": "fa-solid fa-book-open"
+            }
+          ]
+        },
+        {
+          "title": "News",
+          "icon": "fa-solid fa-newspaper",
+          "links": [
+            {
+              "label": "Hacker News",
+              "url": "https://news.ycombinator.com",
+              "icon": "fa-brands fa-hacker-news"
+            },
+            {
+              "label": "BBC News",
+              "url": "https://www.bbc.com/news",
+              "icon": "fa-solid fa-globe"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Internal",
+      "title_suffix": "Services",
+      "type": "internal",
+      "cards": [
+        {
+          "title": "Infrastructure",
+          "icon": "fa-solid fa-server",
+          "links": [
+            {
+              "label": "Router",
+              "url": "http://192.168.1.1",
+              "icon": "fa-solid fa-wifi"
+            },
+            {
+              "label": "Portainer",
+              "url": "http://your-server:9000",
+              "icon": "fa-brands fa-docker"
+            }
+          ]
+        },
+        {
+          "title": "Media",
+          "icon": "fa-solid fa-photo-film",
+          "links": [
+            {
+              "label": "Plex",
+              "url": "http://your-server:32400/web",
+              "icon": "fa-solid fa-play"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

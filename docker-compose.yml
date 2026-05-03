@@ -1,0 +1,9 @@
+services:
+  homepage:
+    build: .
+    ports:
+      - "8888:8080"
+    volumes:
+      - ./config.json:/app/config.json
+      - ./chrome_history:/root/.config/google-chrome/Default/History:ro
+    restart: unless-stopped

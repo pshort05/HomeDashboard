@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Settings</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary-rose: #b91d47;
+            --shadow-dark: #2d1b1b;
+            --moon-blue: #34495e;
+            --circuit-gray: #7f8c8d;
+            --accent-gold: #d4af37;
+            --cream-white: #faf8f5;
+            --soft-gray: #f4f4f4;
+            --text-dark: #2c3e50;
+            --text-light: #495057;
+            --white: #ffffff;
+
+            --gradient-primary: linear-gradient(135deg, var(--primary-rose), var(--moon-blue));
+            --gradient-dark:    linear-gradient(135deg, var(--shadow-dark), var(--text-dark));
+
+            --font-primary:   'Playfair Display', serif;
+            --font-secondary: 'Inter', sans-serif;
+
+            --shadow-soft:   0 4px 6px rgba(0,0,0,0.10);
+            --shadow-medium: 0 8px 25px rgba(0,0,0,0.15);
+            --shadow-strong: 0 15px 35px rgba(0,0,0,0.20);
+
+            --radius:       8px;
+            --radius-large: 12px;
+            --transition-fast: 0.2s ease;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-secondary);
+            background-color: var(--cream-white);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── Edit header ─────────────────────────────────────── */
+        .edit-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--gradient-dark);
+            background-image:
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3Cpattern id='p' x='0' y='0' width='20' height='20' patternUnits='userSpaceOnUse'%3E%3Ccircle cx='10' cy='10' r='1' fill='rgba(185,29,71,0.15)'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100' height='100' fill='url(%23p)'/%3E%3C/svg%3E"),
+                var(--gradient-dark);
+            color: var(--white);
+            padding: 0.9rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 0.4rem 0.75rem;
+            border-radius: var(--radius);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all var(--transition-fast);
+            white-space: nowrap;
+        }
+
+        .back-btn:hover {
+            color: var(--white);
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.4);
+        }
+
+        .edit-header-title {
+            font-family: var(--font-primary);
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--white);
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .edit-header-title i { color: var(--accent-gold); }
+
+        .save-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.25rem;
+            background: var(--gradient-primary);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius);
+            font-family: var(--font-secondary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: var(--shadow-soft);
+            transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+            white-space: nowrap;
+        }
+
+        .save-btn:hover {
+            box-shadow: var(--shadow-medium);
+            transform: translateY(-1px);
+        }
+
+        /* ── Main layout ─────────────────────────────────────── */
+        .edit-main {
+            flex: 1;
+            padding: 2rem 2rem 4rem;
+        }
+
+        .edit-container {
+            max-width: 960px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.75rem;
+        }
+
+        /* ── Panels ──────────────────────────────────────────── */
+        .edit-panel {
+            background: var(--white);
+            border-radius: var(--radius-large);
+            box-shadow: var(--shadow-soft);
+            overflow: hidden;
+        }
+
+        .edit-panel-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
+            background: var(--soft-gray);
+            border-bottom: 2px solid var(--primary-rose);
+        }
+
+        .edit-panel-head h2 {
+            font-family: var(--font-primary);
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .edit-panel-head h2 i { color: var(--primary-rose); }
+
+        .edit-panel-body { padding: 1.5rem; }
+
+        /* ── Form elements ───────────────────────────────────── */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-group { display: flex; flex-direction: column; gap: 0.35rem; }
+
+        .form-group label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--circuit-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .form-group + .form-group { margin-top: 1rem; }
+
+        .einput {
+            padding: 0.5rem 0.75rem;
+            border: 1.5px solid #ddd;
+            border-radius: var(--radius);
+            font-family: var(--font-secondary);
+            font-size: 0.88rem;
+            color: var(--text-dark);
+            background: var(--white);
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+        }
+
+        .einput:focus {
+            outline: none;
+            border-color: var(--primary-rose);
+            box-shadow: 0 0 0 3px rgba(185,29,71,0.10);
+        }
+
+        .eselect {
+            padding: 0.5rem 0.6rem;
+            border: 1.5px solid #ddd;
+            border-radius: var(--radius);
+            font-family: var(--font-secondary);
+            font-size: 0.85rem;
+            color: var(--text-dark);
+            background: var(--white);
+            cursor: pointer;
+        }
+
+        .eselect:focus {
+            outline: none;
+            border-color: var(--primary-rose);
+        }
+
+        /* ── Sections list ───────────────────────────────────── */
+        #sections-container { display: flex; flex-direction: column; gap: 1rem; }
+
+        /* ── Section block ───────────────────────────────────── */
+        .esection {
+            border: 1.5px solid #e0dbd5;
+            border-radius: var(--radius-large);
+            overflow: hidden;
+        }
+
+        .esection-head {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.75rem 1rem;
+            background: var(--soft-gray);
+            border-bottom: 1px solid #e0dbd5;
+            flex-wrap: wrap;
+        }
+
+        .esection-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--primary-rose);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            white-space: nowrap;
+        }
+
+        .einput-title  { flex: 1; min-width: 100px; }
+        .einput-suffix { width: 90px; }
+
+        .esection-body { padding: 1rem; }
+
+        /* ── Card block ──────────────────────────────────────── */
+        .ecard {
+            border: 1px solid #e8e3de;
+            border-radius: var(--radius);
+            margin-bottom: 0.75rem;
+            overflow: hidden;
+        }
+
+        .ecard:last-child { margin-bottom: 0; }
+
+        .ecard-head {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 0.85rem;
+            background: #f9f6f2;
+            border-bottom: 1px solid #e8e3de;
+            flex-wrap: wrap;
+        }
+
+        .icon-preview {
+            font-size: 0.95rem;
+            color: var(--primary-rose);
+            width: 1.1rem;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .einput-icon       { width: 200px; font-size: 0.82rem; font-family: monospace; }
+        .einput-card-title { flex: 1; min-width: 100px; }
+
+        /* ── Links list ──────────────────────────────────────── */
+        .elinks { padding: 0.5rem 0.85rem 0.35rem; }
+
+        .elink {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.35rem 0;
+            border-bottom: 1px solid var(--soft-gray);
+            flex-wrap: wrap;
+        }
+
+        .elink:last-child { border-bottom: none; }
+
+        .einput-link-icon  { width: 180px; font-size: 0.8rem; font-family: monospace; }
+        .einput-link-label { width: 140px; }
+        .einput-link-url   { flex: 1; min-width: 160px; font-size: 0.82rem; }
+
+        /* ── Action buttons ──────────────────────────────────── */
+        .btn-add-section {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.45rem 0.9rem;
+            background: var(--gradient-primary);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius);
+            font-family: var(--font-secondary);
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+        }
+
+        .btn-add-section:hover { box-shadow: var(--shadow-soft); transform: translateY(-1px); }
+
+        .btn-add-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-top: 0.75rem;
+            padding: 0.4rem 0.85rem;
+            background: transparent;
+            color: var(--primary-rose);
+            border: 1.5px dashed var(--primary-rose);
+            border-radius: var(--radius);
+            font-family: var(--font-secondary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background var(--transition-fast), color var(--transition-fast);
+        }
+
+        .btn-add-item:hover { background: rgba(185,29,71,0.06); }
+
+        .btn-add-link {
+            margin: 0.5rem 0.85rem 0.65rem;
+            display: flex;
+        }
+
+        .btn-remove {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.3rem 0.5rem;
+            background: transparent;
+            color: var(--circuit-gray);
+            border: 1.5px solid #ddd;
+            border-radius: var(--radius);
+            font-size: 0.78rem;
+            cursor: pointer;
+            transition: color var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast);
+            flex-shrink: 0;
+        }
+
+        .btn-remove:hover {
+            color: #c0392b;
+            border-color: #c0392b;
+            background: rgba(192,57,43,0.06);
+        }
+
+        /* ── FA hint ─────────────────────────────────────────── */
+        .fa-hint {
+            font-size: 0.72rem;
+            color: var(--circuit-gray);
+            margin-left: 0.25rem;
+        }
+
+        .fa-hint a {
+            color: var(--primary-rose);
+            text-decoration: none;
+        }
+
+        .fa-hint a:hover { text-decoration: underline; }
+
+        /* ── Toast ───────────────────────────────────────────── */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 0.75rem 1.25rem;
+            border-radius: var(--radius);
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--white);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+            z-index: 200;
+        }
+
+        .toast.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast-success { background: #27ae60; }
+        .toast-error   { background: #c0392b; }
+
+        /* ── History scanner ─────────────────────────────────── */
+        .btn-scan {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.1rem;
+            background: var(--gradient-primary);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius);
+            font-family: var(--font-secondary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+        }
+
+        .btn-scan:hover  { box-shadow: var(--shadow-soft); transform: translateY(-1px); }
+        .btn-scan:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        .hist-status {
+            font-size: 0.82rem;
+            color: var(--circuit-gray);
+            margin-top: 0.85rem;
+        }
+
+        .hist-table { margin-top: 1rem; border: 1px solid #e0dbd5; border-radius: var(--radius); overflow: hidden; }
+
+        .hist-row {
+            display: grid;
+            grid-template-columns: 2.2rem 4.5rem 1fr 1fr 9rem;
+            gap: 0.75rem;
+            align-items: center;
+            padding: 0.55rem 1rem;
+            border-bottom: 1px solid #f0ece6;
+            font-size: 0.83rem;
+        }
+
+        .hist-row:last-child { border-bottom: none; }
+        .hist-row:nth-child(odd) { background: #fdfcfb; }
+
+        .hist-head {
+            background: var(--soft-gray);
+            font-weight: 600;
+            font-size: 0.75rem;
+            color: var(--circuit-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .hist-rank  { color: var(--circuit-gray); font-size: 0.78rem; }
+        .hist-visits { color: var(--text-light); font-variant-numeric: tabular-nums; }
+        .hist-domain { font-weight: 600; color: var(--text-dark); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .hist-title  { color: var(--text-light); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+        .badge-active {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.25rem 0.65rem;
+            background: rgba(39,174,96,0.12);
+            color: #1e8449;
+            border-radius: 99px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .btn-hist-add {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.28rem 0.7rem;
+            background: transparent;
+            color: var(--primary-rose);
+            border: 1.5px solid var(--primary-rose);
+            border-radius: var(--radius);
+            font-family: var(--font-secondary);
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background var(--transition-fast), color var(--transition-fast);
+            white-space: nowrap;
+        }
+
+        .btn-hist-add:hover { background: var(--primary-rose); color: var(--white); }
+
+        /* inline add form row */
+        .hist-add-row {
+            display: none;
+            padding: 0.75rem 1rem 0.85rem 3.5rem;
+            background: #fdf8f0;
+            border-bottom: 1px solid #e8d8b0;
+            border-top: 1px solid #e8d8b0;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+
+        .hist-add-row.open { display: flex; }
+
+        .hist-add-row .form-group { margin: 0; }
+
+        .hist-add-row label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--circuit-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .einput-sm { padding: 0.38rem 0.6rem; font-size: 0.82rem; }
+
+        .btn-hist-confirm {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.38rem 0.85rem;
+            background: var(--gradient-primary);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius);
+            font-family: var(--font-secondary);
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            align-self: flex-end;
+        }
+
+        .btn-hist-confirm:hover { box-shadow: var(--shadow-soft); }
+
+        .btn-hist-cancel {
+            padding: 0.38rem 0.7rem;
+            background: transparent;
+            color: var(--circuit-gray);
+            border: 1px solid #ddd;
+            border-radius: var(--radius);
+            font-family: var(--font-secondary);
+            font-size: 0.82rem;
+            cursor: pointer;
+            align-self: flex-end;
+        }
+
+        .btn-hist-cancel:hover { background: var(--soft-gray); }
+
+        .btn-hist-delete {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.28rem 0.6rem;
+            background: transparent;
+            color: #c0392b;
+            border: 1.5px solid #c0392b;
+            border-radius: var(--radius);
+            font-family: var(--font-secondary);
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background var(--transition-fast), color var(--transition-fast);
+            white-space: nowrap;
+        }
+
+        .btn-hist-delete:hover { background: #c0392b; color: var(--white); }
+
+        .hist-row-notop { grid-template-columns: 1fr 1fr 1.5fr 11rem; }
+
+        .notop-heading {
+            margin: 1.5rem 0 0.75rem;
+            font-family: var(--font-primary);
+            font-size: 1rem;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .notop-heading i { color: var(--accent-gold); }
+
+        /* ── Responsive ──────────────────────────────────────── */
+        @media (max-width: 700px) {
+            .form-row { grid-template-columns: 1fr; }
+            .edit-main { padding: 1.25rem 0.75rem 3rem; }
+            .edit-header { padding: 0.75rem 1rem; }
+            .einput-icon, .einput-link-icon { width: 130px; }
+            .einput-suffix { width: 70px; }
+            .hist-row { grid-template-columns: 2rem 3.5rem 1fr 6rem; }
+            .hist-title { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="edit-header">
+    <a href="/" class="back-btn">
+        <i class="fa-solid fa-arrow-left"></i> Dashboard
+    </a>
+    <span class="edit-header-title">
+        <i class="fa-solid fa-gear"></i> Dashboard Settings
+    </span>
+    <button class="save-btn" onclick="saveConfig()">
+        <i class="fa-solid fa-floppy-disk"></i> Save Changes
+    </button>
+</header>
+
+<main class="edit-main">
+    <div class="edit-container">
+
+        <!-- ── Site Settings ────────────────────────────────── -->
+        <div class="edit-panel">
+            <div class="edit-panel-head">
+                <h2><i class="fa-solid fa-sliders"></i> Site Settings</h2>
+            </div>
+            <div class="edit-panel-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="site-title">Page Title</label>
+                        <input id="site-title" type="text" class="einput"
+                               oninput="state.site.title=this.value;dirty=true;">
+                    </div>
+                    <div class="form-group">
+                        <label for="site-subtitle">Subtitle</label>
+                        <input id="site-subtitle" type="text" class="einput"
+                               oninput="state.site.subtitle=this.value;dirty=true;">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="site-footer">Footer Text</label>
+                    <input id="site-footer" type="text" class="einput"
+                           oninput="state.site.footer=this.value;dirty=true;">
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Browser History Scanner ──────────────────────── -->
+        <div class="edit-panel">
+            <div class="edit-panel-head">
+                <h2><i class="fa-solid fa-clock-rotate-left"></i> Browser History Import</h2>
+                <button class="btn-scan" id="scan-btn" onclick="scanHistory()">
+                    <i class="fa-solid fa-magnifying-glass"></i> Scan Top 100 Sites
+                </button>
+            </div>
+            <div class="edit-panel-body">
+                <div id="hist-status" class="hist-status">
+                    Click <strong>Scan Top 100 Sites</strong> to read your Chrome history and find sites to add.
+                </div>
+                <div id="hist-table"></div>
+            </div>
+        </div>
+
+        <!-- ── Sections ─────────────────────────────────────── -->
+        <div class="edit-panel">
+            <div class="edit-panel-head">
+                <h2><i class="fa-solid fa-layer-group"></i> Sections &amp; Cards</h2>
+                <button class="btn-add-section" onclick="addSection()">
+                    <i class="fa-solid fa-plus"></i> Add Section
+                </button>
+            </div>
+            <div class="edit-panel-body">
+                <div id="sections-container"></div>
+            </div>
+        </div>
+
+    </div><!-- /edit-container -->
+</main>
+
+<div id="toast" class="toast"></div>
+
+<!-- Config injected by Flask — no XSS risk as it is server-rendered JSON -->
+<script id="config-data" type="application/json">{{ config | tojson }}</script>
+
+<script>
+/* ── State ──────────────────────────────────────────────────────────────── */
+
+let state;
+let dirty = false;
+let _scannedSites = null;
+
+/* ── Helpers ────────────────────────────────────────────────────────────── */
+
+function esc(str) {
+    if (str == null) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+}
+
+function set(path, value) {
+    dirty = true;
+    const keys = path.split('.');
+    let obj = state;
+    for (let i = 0; i < keys.length - 1; i++) obj = obj[keys[i]];
+    obj[keys[keys.length - 1]] = value;
+}
+
+/* ── Render: sections ───────────────────────────────────────────────────── */
+
+function renderSections() {
+    document.getElementById('sections-container').innerHTML =
+        state.sections.map(sectionHTML).join('');
+}
+
+function rerenderCards(si) {
+    const el = document.getElementById('ecards-' + si);
+    if (el) el.innerHTML = state.sections[si].cards.map((c, ci) => cardHTML(c, si, ci)).join('');
+}
+
+function rerenderLinks(si, ci) {
+    const el = document.getElementById('elinks-' + si + '-' + ci);
+    if (el) el.innerHTML = state.sections[si].cards[ci].links
+        .map((l, li) => linkHTML(l, si, ci, li)).join('');
+}
+
+/* ── HTML builders ──────────────────────────────────────────────────────── */
+
+function sectionHTML(s, si) {
+    return `
+<div class="esection" id="esection-${si}">
+  <div class="esection-head">
+    <span class="esection-label">Section ${si + 1}</span>
+    <input type="text" class="einput einput-title"
+           value="${esc(s.title)}" placeholder="Title"
+           oninput="set('sections.${si}.title',this.value)">
+    <input type="text" class="einput einput-suffix"
+           value="${esc(s.title_suffix)}" placeholder="Suffix"
+           oninput="set('sections.${si}.title_suffix',this.value)">
+    <select class="eselect" onchange="set('sections.${si}.type',this.value)">
+      <option value="external" ${s.type === 'external' ? 'selected' : ''}>External (light)</option>
+      <option value="internal" ${s.type === 'internal' ? 'selected' : ''}>Internal (dark)</option>
+    </select>
+    <button class="btn-remove" onclick="removeSection(${si})" title="Delete section">
+      <i class="fa-solid fa-trash"></i>
+    </button>
+  </div>
+  <div class="esection-body">
+    <div id="ecards-${si}">
+      ${s.cards.map((c, ci) => cardHTML(c, si, ci)).join('')}
+    </div>
+    <button class="btn-add-item" onclick="addCard(${si})">
+      <i class="fa-solid fa-plus"></i> Add Card
+    </button>
+  </div>
+</div>`;
+}
+
+function cardHTML(c, si, ci) {
+    return `
+<div class="ecard" id="ecard-${si}-${ci}">
+  <div class="ecard-head">
+    <i class="${esc(c.icon)} icon-preview" id="card-icon-preview-${si}-${ci}"></i>
+    <input type="text" class="einput einput-icon"
+           value="${esc(c.icon)}" placeholder="FA icon class"
+           oninput="set('sections.${si}.cards.${ci}.icon',this.value);
+                    document.getElementById('card-icon-preview-${si}-${ci}').className=this.value+' icon-preview';"
+           title="Font Awesome class, e.g. fa-solid fa-envelope">
+    <input type="text" class="einput einput-card-title"
+           value="${esc(c.title)}" placeholder="Card title"
+           oninput="set('sections.${si}.cards.${ci}.title',this.value)">
+    <button class="btn-remove" onclick="removeCard(${si},${ci})" title="Delete card">
+      <i class="fa-solid fa-trash"></i>
+    </button>
+  </div>
+  <div class="elinks" id="elinks-${si}-${ci}">
+    ${c.links.map((l, li) => linkHTML(l, si, ci, li)).join('')}
+  </div>
+  <button class="btn-add-item btn-add-link" onclick="addLink(${si},${ci})">
+    <i class="fa-solid fa-plus"></i> Add Link
+  </button>
+</div>`;
+}
+
+function linkHTML(l, si, ci, li) {
+    const pid = `link-icon-preview-${si}-${ci}-${li}`;
+    return `
+<div class="elink" id="elink-${si}-${ci}-${li}">
+  <i class="${esc(l.icon)} icon-preview" id="${pid}" title="${esc(l.icon)}"></i>
+  <input type="text" class="einput einput-link-icon"
+         value="${esc(l.icon)}" placeholder="FA icon class"
+         oninput="set('sections.${si}.cards.${ci}.links.${li}.icon',this.value);
+                  document.getElementById('${pid}').className=this.value+' icon-preview';"
+         title="Font Awesome class">
+  <input type="text" class="einput einput-link-label"
+         value="${esc(l.label)}" placeholder="Label"
+         oninput="set('sections.${si}.cards.${ci}.links.${li}.label',this.value)">
+  <input type="text" class="einput einput-link-url"
+         value="${esc(l.url)}" placeholder="https://..."
+         oninput="set('sections.${si}.cards.${ci}.links.${li}.url',this.value)">
+  <button class="btn-remove" onclick="removeLink(${si},${ci},${li})" title="Delete link">
+    <i class="fa-solid fa-times"></i>
+  </button>
+</div>`;
+}
+
+/* ── Structural operations ──────────────────────────────────────────────── */
+
+function addSection() {
+    state.sections.push({ title: 'New Section', title_suffix: 'Sites', type: 'external', cards: [] });
+    dirty = true;
+    renderSections();
+}
+
+function removeSection(si) {
+    if (!confirm('Delete this entire section and all its cards?')) return;
+    state.sections.splice(si, 1);
+    dirty = true;
+    renderSections();
+}
+
+function addCard(si) {
+    state.sections[si].cards.push({ title: 'New Card', icon: 'fa-solid fa-star', links: [] });
+    dirty = true;
+    rerenderCards(si);
+}
+
+function removeCard(si, ci) {
+    if (!confirm('Delete this card and all its links?')) return;
+    state.sections[si].cards.splice(ci, 1);
+    dirty = true;
+    rerenderCards(si);
+}
+
+function addLink(si, ci) {
+    state.sections[si].cards[ci].links.push({ label: 'New Link', url: 'https://', icon: 'fa-solid fa-link' });
+    dirty = true;
+    rerenderLinks(si, ci);
+}
+
+function removeLink(si, ci, li) {
+    state.sections[si].cards[ci].links.splice(li, 1);
+    dirty = true;
+    rerenderLinks(si, ci);
+}
+
+/* ── Save ───────────────────────────────────────────────────────────────── */
+
+async function saveConfig() {
+    try {
+        const res = await fetch('/api/config', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(state)
+        });
+        if (res.ok) {
+            dirty = false;
+            showToast('Changes saved.', 'success');
+        } else {
+            showToast('Save failed — server returned ' + res.status, 'error');
+        }
+    } catch (err) {
+        showToast('Save failed — ' + err.message, 'error');
+    }
+}
+
+/* ── Toast ──────────────────────────────────────────────────────────────── */
+
+let toastTimer = null;
+
+function showToast(msg, type) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = 'toast toast-' + type + ' visible';
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { el.classList.remove('visible'); }, 3000);
+}
+
+/* ── Unsaved-changes guard ──────────────────────────────────────────────── */
+
+window.addEventListener('beforeunload', function (e) {
+    if (dirty) {
+        e.preventDefault();
+        e.returnValue = '';
+    }
+});
+
+/* ── Init ───────────────────────────────────────────────────────────────── */
+
+document.addEventListener('DOMContentLoaded', function () {
+    state = JSON.parse(document.getElementById('config-data').textContent);
+
+    document.getElementById('site-title').value    = state.site.title;
+    document.getElementById('site-subtitle').value = state.site.subtitle;
+    document.getElementById('site-footer').value   = state.site.footer;
+
+    renderSections();
+});
+
+/* ── History scanner ────────────────────────────────────────────────────── */
+
+function activeDomains() {
+    const domains = new Set();
+    for (const section of state.sections) {
+        for (const card of section.cards) {
+            for (const link of card.links) {
+                try {
+                    let host = new URL(link.url).hostname.toLowerCase();
+                    if (host.startsWith('www.')) host = host.slice(4);
+                    domains.add(host);
+                } catch (_) {}
+            }
+        }
+    }
+    return domains;
+}
+
+function cardOptions() {
+    const opts = [];
+    state.sections.forEach((sec, si) => {
+        sec.cards.forEach((card, ci) => {
+            opts.push({ si, ci, label: `${sec.title} → ${card.title}` });
+        });
+    });
+    return opts;
+}
+
+function cardDropdownHTML(selectId, selectedSi, selectedCi) {
+    const opts = cardOptions();
+    const options = opts.map(o =>
+        `<option value="${o.si}:${o.ci}" ${o.si === selectedSi && o.ci === selectedCi ? 'selected' : ''}>
+            ${esc(o.label)}
+         </option>`
+    ).join('');
+    return `<select id="${selectId}" class="eselect einput-sm">${options}</select>`;
+}
+
+function cleanTitle(raw) {
+    return (raw || '')
+        .replace(/^\(\d+[^)]*\)\s*[-–—]\s*/g, '')   // strip "(123 unread) - "
+        .replace(/\s*[-–—]\s*\S+@\S+\s*/g, ' ')     // strip "- email@addr "
+        .trim()
+        .slice(0, 55) || 'New Link';
+}
+
+async function scanHistory() {
+    const btn = document.getElementById('scan-btn');
+    const status = document.getElementById('hist-status');
+    const table = document.getElementById('hist-table');
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Scanning…';
+    status.textContent = 'Reading Chrome history…';
+    table.innerHTML = '';
+
+    let sites;
+    try {
+        const res = await fetch('/api/history');
+        if (!res.ok) throw new Error('Server returned ' + res.status);
+        sites = await res.json();
+        if (sites.error) throw new Error(sites.error);
+    } catch (err) {
+        status.textContent = 'Scan failed: ' + err.message;
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i> Scan Top 100 Sites';
+        return;
+    }
+
+    const active = activeDomains();
+    status.textContent = `Found ${sites.length} sites. Sites marked Active are already on your dashboard.`;
+
+    // Header row
+    let html = `
+        <div class="hist-table">
+            <div class="hist-row hist-head">
+                <span>#</span>
+                <span>Visits</span>
+                <span>Domain</span>
+                <span>Title</span>
+                <span>Action</span>
+            </div>`;
+
+    sites.forEach((site, i) => {
+        const isActive = active.has(site.domain);
+        const actionHTML = isActive
+            ? `<span class="badge-active"><i class="fa-solid fa-check"></i> Active</span>`
+            : `<button class="btn-hist-add" id="add-btn-${i}" onclick="toggleAddForm(${i})">
+                   <i class="fa-solid fa-plus"></i> Add
+               </button>`;
+
+        html += `
+            <div class="hist-row" id="hist-row-${i}">
+                <span class="hist-rank">${i + 1}</span>
+                <span class="hist-visits">${site.visits.toLocaleString()}</span>
+                <span class="hist-domain" title="${esc(site.domain)}">${esc(site.domain)}</span>
+                <span class="hist-title"  title="${esc(site.title)}">${esc(cleanTitle(site.title))}</span>
+                <span id="hist-action-${i}">${actionHTML}</span>
+            </div>
+            <div class="hist-add-row" id="hist-form-${i}"
+                 data-url="${esc(site.url)}"
+                 data-domain="${esc(site.domain)}"
+                 data-title="${esc(cleanTitle(site.title))}">
+            </div>`;
+    });
+
+    html += '</div>';
+    _scannedSites = sites;
+    table.innerHTML = html;
+
+    const notTopDiv = document.createElement('div');
+    notTopDiv.id = 'notop-container';
+    notTopDiv.innerHTML = buildNotTop100HTML(sites);
+    table.appendChild(notTopDiv);
+
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa-solid fa-rotate"></i> Re-Scan';
+}
+
+function toggleAddForm(i) {
+    const formRow = document.getElementById(`hist-form-${i}`);
+    if (formRow.classList.contains('open')) {
+        formRow.classList.remove('open');
+        return;
+    }
+
+    // Build the inline form using the data stored on the element
+    const url    = formRow.dataset.url;
+    const title  = formRow.dataset.title;
+    const opts   = cardOptions();
+    const defaultOpt = opts[0] ? `${opts[0].si}:${opts[0].ci}` : '0:0';
+
+    const cardOpts = opts.map(o =>
+        `<option value="${o.si}:${o.ci}">${esc(o.label)}</option>`
+    ).join('');
+
+    formRow.innerHTML = `
+        <div class="form-group">
+            <label>Add to Card</label>
+            <select class="eselect einput-sm" id="hf-card-${i}">${cardOpts}</select>
+        </div>
+        <div class="form-group">
+            <label>Label</label>
+            <input type="text" class="einput einput-sm" id="hf-label-${i}"
+                   value="${esc(title)}" style="width:160px;">
+        </div>
+        <div class="form-group">
+            <label>URL</label>
+            <input type="text" class="einput einput-sm" id="hf-url-${i}"
+                   value="${esc(url)}" style="width:230px;">
+        </div>
+        <div class="form-group">
+            <label>Icon <small style="font-weight:400;text-transform:none;letter-spacing:0">
+                <a href="https://fontawesome.com/search" target="_blank" rel="noopener" style="color:var(--primary-rose)">FA search</a>
+            </small></label>
+            <input type="text" class="einput einput-sm" id="hf-icon-${i}"
+                   value="fa-solid fa-link" style="width:190px;font-family:monospace;">
+        </div>
+        <button class="btn-hist-confirm" onclick="confirmAdd(${i})">
+            <i class="fa-solid fa-circle-plus"></i> Add to Dashboard
+        </button>
+        <button class="btn-hist-cancel" onclick="toggleAddForm(${i})">Cancel</button>
+    `;
+
+    formRow.classList.add('open');
+}
+
+function confirmAdd(i) {
+    const cardVal = document.getElementById(`hf-card-${i}`).value;
+    const label   = document.getElementById(`hf-label-${i}`).value.trim();
+    const url     = document.getElementById(`hf-url-${i}`).value.trim();
+    const icon    = document.getElementById(`hf-icon-${i}`).value.trim();
+
+    if (!label || !url) { showToast('Label and URL are required.', 'error'); return; }
+
+    const [si, ci] = cardVal.split(':').map(Number);
+    state.sections[si].cards[ci].links.push({ label, url, icon });
+    dirty = true;
+
+    // Close form and flip button to Active badge
+    document.getElementById(`hist-form-${i}`).classList.remove('open');
+    document.getElementById(`hist-action-${i}`).innerHTML =
+        `<span class="badge-active"><i class="fa-solid fa-check"></i> Active</span>`;
+
+    showToast(`"${label}" added to ${state.sections[si].cards[ci].title}. Save to keep it.`, 'success');
+}
+
+function buildNotTop100HTML(sites) {
+    const scanned = new Set(sites.map(s => s.domain));
+    const rows = [];
+    state.sections.forEach((sec, si) => {
+        sec.cards.forEach((card, ci) => {
+            card.links.forEach((link, li) => {
+                try {
+                    let host = new URL(link.url).hostname.toLowerCase();
+                    if (host.startsWith('www.')) host = host.slice(4);
+                    if (!scanned.has(host)) {
+                        rows.push({ si, ci, li, host, link, sec, card });
+                    }
+                } catch (_) {}
+            });
+        });
+    });
+
+    if (rows.length === 0) {
+        return '<p style="margin-top:1rem;font-size:0.85rem;color:var(--circuit-gray);">All dashboard sites appear in your top 100.</p>';
+    }
+
+    let html = `
+        <h3 class="notop-heading">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            Not in Top 100 &mdash; ${rows.length} site${rows.length === 1 ? '' : 's'}
+        </h3>
+        <div class="hist-table">
+            <div class="hist-row hist-head hist-row-notop">
+                <span>Domain</span>
+                <span>Label</span>
+                <span>Card</span>
+                <span>Action</span>
+            </div>`;
+
+    rows.forEach(({ si, ci, li, host, link, sec, card }) => {
+        html += `
+            <div class="hist-row hist-row-notop" id="notop-${si}-${ci}-${li}">
+                <span class="hist-domain" title="${esc(host)}">${esc(host)}</span>
+                <span class="hist-title" title="${esc(link.label)}">${esc(link.label)}</span>
+                <span class="hist-title" title="${esc(sec.title + ' → ' + card.title)}">${esc(sec.title)} &rarr; ${esc(card.title)}</span>
+                <span style="display:flex;gap:0.35rem;align-items:center;flex-wrap:wrap;">
+                    <span class="badge-active"><i class="fa-solid fa-check"></i> Active</span>
+                    <button class="btn-hist-delete" onclick="deleteConfigLink(${si},${ci},${li})">
+                        <i class="fa-solid fa-xmark"></i> Delete
+                    </button>
+                </span>
+            </div>`;
+    });
+
+    html += '</div>';
+    return html;
+}
+
+function deleteConfigLink(si, ci, li) {
+    const label = state.sections[si].cards[ci].links[li].label;
+    state.sections[si].cards[ci].links.splice(li, 1);
+    dirty = true;
+    rerenderLinks(si, ci);
+    refreshNotTop100();
+    showToast(`"${label}" removed. Save to apply.`, 'success');
+}
+
+function refreshNotTop100() {
+    if (!_scannedSites) return;
+    const el = document.getElementById('notop-container');
+    if (el) el.innerHTML = buildNotTop100HTML(_scannedSites);
+}
+</script>
+
+</body>
+</html>
