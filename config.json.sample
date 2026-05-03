@@ -2,7 +2,10 @@
   "site": {
     "title": "My Dashboard",
     "subtitle": "Personal Home Page",
-    "footer": "My Dashboard — Personal Home Page"
+    "footer": "My Dashboard — Personal Home Page",
+    "weather_label": "",
+    "weather_lat": null,
+    "weather_lon": null
   },
   "sections": [
     {

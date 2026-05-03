@@ -836,6 +836,33 @@
                     </div>
 
                     <div class="pref-group">
+                        <div class="pref-label">Weather</div>
+                        <div class="form-group">
+                            <label for="pref-weather-label">Location Name</label>
+                            <input id="pref-weather-label" type="text" class="einput"
+                                   placeholder="e.g. New York"
+                                   oninput="set('site.weather_label', this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label for="pref-weather-lat">Latitude</label>
+                            <input id="pref-weather-lat" type="number" class="einput"
+                                   step="any" placeholder="40.7128"
+                                   oninput="set('site.weather_lat', this.value ? parseFloat(this.value) : null)">
+                        </div>
+                        <div class="form-group">
+                            <label for="pref-weather-lon">Longitude</label>
+                            <input id="pref-weather-lon" type="number" class="einput"
+                                   step="any" placeholder="-74.0060"
+                                   oninput="set('site.weather_lon', this.value ? parseFloat(this.value) : null)">
+                        </div>
+                        <p class="pref-hint">
+                            <a href="https://www.latlong.net/" target="_blank" rel="noopener"
+                               style="color:var(--primary-rose)">Find coordinates</a>
+                            &mdash; data from Open-Meteo, refreshed hourly.
+                        </p>
+                    </div>
+
+                    <div class="pref-group">
                         <div class="pref-label">Chrome</div>
                         <button class="btn-pref" onclick="setAsStartPage()">
                             <i class="fa-brands fa-chrome"></i> Set as Start Page
@@ -1211,6 +1238,10 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('site-title').value    = state.site.title;
     document.getElementById('site-subtitle').value = state.site.subtitle;
     document.getElementById('site-footer').value   = state.site.footer;
+
+    document.getElementById('pref-weather-label').value = state.site.weather_label || '';
+    document.getElementById('pref-weather-lat').value   = state.site.weather_lat != null ? state.site.weather_lat : '';
+    document.getElementById('pref-weather-lon').value   = state.site.weather_lon != null ? state.site.weather_lon : '';
 
     renderSections();
 

@@ -1,4 +1,7 @@
-Add up/down reordering to links within cards
+Update README with weather configuration and minor corrections
 
-- moveLink() mirrors moveSection/moveCard pattern
-- Up/down buttons disabled at list boundaries
+- Add weather widget to features list
+- Add Weather subsection under Configuration explaining the Settings UI,
+  how to find coordinates, and how to disable the widget
+- Update site object example to include weather fields
+- Correct color scheme list (Grey was missing)

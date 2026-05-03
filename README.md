@@ -9,7 +9,8 @@ A personal browser dashboard served from a Docker container on your local networ
 - In-browser editor at `/edit` for managing sections, cards, and links
 - Chrome history scanner: shows your top 100 most-visited sites with one-click add, plus a "Not in Top 100" list of dashboard sites absent from your history with a delete button
 - Live clock in the header
-- Per-user color scheme (Red, Blue, Green) and local items visibility, stored in the browser via `localStorage`
+- Per-user color scheme (Red, Blue, Green, Grey) and local items visibility, stored in the browser via `localStorage`
+- Weather widget in the header: current conditions and a scrollable 24-hour hourly forecast, powered by Open-Meteo (no API key required), refreshed every 60 minutes
 - Chrome extension to override the new tab page
 
 ## Project Structure
@@ -232,11 +233,31 @@ All content is stored in `config.json`, which is bind-mounted into the container
   "site": {
     "title": "My Dashboard",
     "subtitle": "Personal Home Page",
-    "footer": "My Dashboard — Personal Home Page"
+    "footer": "My Dashboard — Personal Home Page",
+    "weather_label": "New York",
+    "weather_lat": 40.7128,
+    "weather_lon": -74.0060
   },
   "sections": []
 }
 ```
+
+### Weather
+
+The weather widget is hidden until coordinates are configured. To enable it:
+
+1. Open the in-browser editor at `/edit`.
+2. In the **Preferences** sidebar on the left, find the **Weather** section.
+3. Enter a **Location Name** (displayed in the popup header), **Latitude**, and **Longitude**.
+4. Click **Save Changes**.
+
+The widget will appear in the header next to the clock on the next page load. Click it to open a popup showing current temperature, humidity, wind speed, and a scrollable 24-hour hourly forecast.
+
+If you do not know your coordinates, the **Find Coordinates** link in the Weather preferences opens [latlong.net](https://www.latlong.net/), where you can search by city or address.
+
+To disable the widget, clear the Latitude and Longitude fields and save. The widget will disappear from the header.
+
+**Data source:** [Open-Meteo](https://open-meteo.com/) — free, no account or API key required. Weather data is fetched server-side and cached for 60 minutes, so no location data is sent from the browser.
 
 ### Section
 

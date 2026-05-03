@@ -3,6 +3,8 @@ import os
 import platform
 import shutil
 import sqlite3
+import time
+import urllib.request
 from collections import defaultdict
 from pathlib import Path
 from urllib.parse import urlparse
@@ -24,6 +26,55 @@ def _chrome_history_path() -> Path:
 
 
 CHROME_HISTORY = _chrome_history_path()
+
+
+_weather_cache = {'data': None, 'fetched_at': 0.0, 'lat': None, 'lon': None}
+_WEATHER_TTL = 3600
+
+
+def _fetch_weather(lat, lon):
+    url = (
+        'https://api.open-meteo.com/v1/forecast'
+        f'?latitude={lat}&longitude={lon}'
+        '&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m'
+        '&hourly=temperature_2m,weather_code,precipitation_probability'
+        '&temperature_unit=fahrenheit&wind_speed_unit=mph&forecast_days=2&timezone=auto'
+    )
+    with urllib.request.urlopen(url, timeout=10) as resp:
+        return json.loads(resp.read().decode())
+
+
+@app.route('/api/weather')
+def get_weather():
+    cfg = load_config()
+    site = cfg.get('site', {})
+    lat = site.get('weather_lat')
+    lon = site.get('weather_lon')
+    if lat is None or lon is None:
+        return jsonify({'error': 'no location configured'}), 404
+    try:
+        lat = float(lat)
+        lon = float(lon)
+    except (TypeError, ValueError):
+        return jsonify({'error': 'invalid location'}), 400
+
+    now = time.time()
+    if (_weather_cache['data'] is not None
+            and _weather_cache['lat'] == lat
+            and _weather_cache['lon'] == lon
+            and now - _weather_cache['fetched_at'] < _WEATHER_TTL):
+        return jsonify(_weather_cache['data'])
+
+    try:
+        data = _fetch_weather(lat, lon)
+    except Exception as exc:
+        return jsonify({'error': str(exc)}), 502
+
+    _weather_cache['data'] = data
+    _weather_cache['fetched_at'] = now
+    _weather_cache['lat'] = lat
+    _weather_cache['lon'] = lon
+    return jsonify(data)
 
 
 @app.template_filter('origin')

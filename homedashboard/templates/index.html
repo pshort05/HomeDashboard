@@ -319,6 +319,172 @@
             border-radius: 2px;
         }
 
+        /* ── Weather ─────────────────────────────────────────── */
+        .weather-wrap { position: relative; }
+
+        .weather-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.4rem 0.75rem;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: var(--radius);
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+            transition: background var(--transition-fast), border-color var(--transition-fast);
+        }
+
+        .weather-badge:hover {
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.4);
+        }
+
+        .weather-badge > i {
+            font-size: 1rem;
+            color: var(--accent-gold);
+        }
+
+        .weather-badge > span {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--white);
+            letter-spacing: 0.02em;
+        }
+
+        .weather-popup {
+            position: absolute;
+            top: calc(100% + 0.6rem);
+            right: 0;
+            width: 280px;
+            max-width: calc(100vw - 2rem);
+            background: var(--white);
+            border-radius: var(--radius-large);
+            box-shadow: var(--shadow-strong);
+            z-index: 50;
+            overflow: hidden;
+        }
+
+        .weather-popup-head {
+            background: var(--gradient-dark);
+            padding: 0.75rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .weather-popup-head .wloc {
+            font-family: var(--font-primary);
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: var(--white);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .weather-popup-head .wdesc {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.7);
+            white-space: nowrap;
+        }
+
+        .weather-now {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--soft-gray);
+        }
+
+        .wnow-temp {
+            font-family: var(--font-primary);
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .wnow-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            font-size: 0.83rem;
+            color: var(--text-light);
+        }
+
+        .wnow-details > span {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .wnow-details i {
+            width: 0.9rem;
+            text-align: center;
+            color: var(--circuit-gray);
+            font-size: 0.8rem;
+        }
+
+        .weather-forecast-wrap {
+            padding: 0.6rem 0.75rem;
+            overflow-x: auto;
+            scrollbar-width: thin;
+        }
+
+        .weather-forecast-row {
+            display: flex;
+            gap: 0.35rem;
+            min-width: max-content;
+        }
+
+        .weather-hour {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.18rem;
+            min-width: 44px;
+            padding: 0.3rem 0.2rem;
+            border-radius: var(--radius);
+            transition: background var(--transition-fast);
+        }
+
+        .weather-hour:hover { background: var(--soft-gray); }
+
+        .weather-hour-time {
+            font-size: 0.68rem;
+            color: var(--circuit-gray);
+            font-weight: 500;
+        }
+
+        .weather-hour > i {
+            font-size: 0.85rem;
+            color: var(--primary-rose);
+        }
+
+        .weather-hour-temp {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .weather-hour-pop {
+            font-size: 0.65rem;
+            color: #2980b9;
+        }
+
+        .weather-footer {
+            padding: 0.35rem 1rem;
+            background: var(--soft-gray);
+            font-size: 0.7rem;
+            color: var(--circuit-gray);
+            border-top: 1px solid #e8e3de;
+            text-align: right;
+        }
+
         @media (max-width: 768px) {
             .site-header {
                 flex-direction: column;
@@ -352,6 +518,30 @@
         <p>{{ config.site.subtitle }}</p>
     </div>
     <div class="header-right">
+        <div class="weather-wrap" id="weather-widget" style="display:none"
+             data-label="{{ config.site.get('weather_label') or '' }}">
+            <div class="weather-badge" id="weather-badge">
+                <i id="weather-icon" class="fa-solid fa-sun"></i>
+                <span id="weather-temp">—</span>
+            </div>
+            <div class="weather-popup" id="weather-popup" style="display:none">
+                <div class="weather-popup-head">
+                    <span class="wloc" id="weather-location">—</span>
+                    <span class="wdesc" id="weather-desc">—</span>
+                </div>
+                <div class="weather-now">
+                    <span class="wnow-temp" id="weather-now-temp">—</span>
+                    <div class="wnow-details">
+                        <span><i class="fa-solid fa-droplet"></i> <span id="weather-humidity">—</span></span>
+                        <span><i class="fa-solid fa-wind"></i> <span id="weather-wind">—</span></span>
+                    </div>
+                </div>
+                <div class="weather-forecast-wrap">
+                    <div id="weather-forecast" class="weather-forecast-row"></div>
+                </div>
+                <div class="weather-footer" id="weather-updated"></div>
+            </div>
+        </div>
         <div class="header-clock">
             <div class="clock-time" id="clock"></div>
             <div class="clock-date"  id="date"></div>
@@ -500,6 +690,123 @@
                 input.blur();
             }
         });
+    }());
+</script>
+
+<script>
+    (function () {
+        const WMO = {
+            0:  ['Clear',             'fa-solid fa-sun'],
+            1:  ['Mainly Clear',      'fa-solid fa-sun'],
+            2:  ['Partly Cloudy',     'fa-solid fa-cloud-sun'],
+            3:  ['Overcast',          'fa-solid fa-cloud'],
+            45: ['Fog',               'fa-solid fa-smog'],
+            48: ['Icy Fog',           'fa-solid fa-smog'],
+            51: ['Light Drizzle',     'fa-solid fa-cloud-rain'],
+            53: ['Drizzle',           'fa-solid fa-cloud-rain'],
+            55: ['Heavy Drizzle',     'fa-solid fa-cloud-rain'],
+            61: ['Light Rain',        'fa-solid fa-cloud-rain'],
+            63: ['Rain',              'fa-solid fa-cloud-rain'],
+            65: ['Heavy Rain',        'fa-solid fa-cloud-showers-heavy'],
+            71: ['Light Snow',        'fa-solid fa-snowflake'],
+            73: ['Snow',              'fa-solid fa-snowflake'],
+            75: ['Heavy Snow',        'fa-solid fa-snowflake'],
+            77: ['Snow Grains',       'fa-solid fa-snowflake'],
+            80: ['Rain Showers',      'fa-solid fa-cloud-showers-heavy'],
+            81: ['Heavy Showers',     'fa-solid fa-cloud-showers-heavy'],
+            82: ['Violent Showers',   'fa-solid fa-cloud-showers-heavy'],
+            85: ['Snow Showers',      'fa-solid fa-snowflake'],
+            86: ['Heavy Snow Showers','fa-solid fa-snowflake'],
+            95: ['Thunderstorm',      'fa-solid fa-bolt'],
+            96: ['Thunderstorm',      'fa-solid fa-cloud-bolt'],
+            99: ['Thunderstorm',      'fa-solid fa-cloud-bolt'],
+        };
+
+        function wmo(code) { return WMO[code] || ['Unknown', 'fa-solid fa-cloud']; }
+
+        const widget     = document.getElementById('weather-widget');
+        const badge      = document.getElementById('weather-badge');
+        const popup      = document.getElementById('weather-popup');
+        const iconEl     = document.getElementById('weather-icon');
+        const tempEl     = document.getElementById('weather-temp');
+        const locEl      = document.getElementById('weather-location');
+        const descEl     = document.getElementById('weather-desc');
+        const humEl      = document.getElementById('weather-humidity');
+        const windEl     = document.getElementById('weather-wind');
+        const nowTempEl  = document.getElementById('weather-now-temp');
+        const forecastEl = document.getElementById('weather-forecast');
+        const updatedEl  = document.getElementById('weather-updated');
+
+        let popupOpen = false;
+
+        badge.addEventListener('click', function () {
+            popupOpen = !popupOpen;
+            popup.style.display = popupOpen ? '' : 'none';
+        });
+
+        document.addEventListener('click', function (e) {
+            if (popupOpen && !widget.contains(e.target)) {
+                popupOpen = false;
+                popup.style.display = 'none';
+            }
+        });
+
+        function fmtHour(iso) {
+            const h = parseInt(iso.slice(11, 13), 10);
+            if (h === 0)  return '12am';
+            if (h < 12)   return h + 'am';
+            if (h === 12) return '12pm';
+            return (h - 12) + 'pm';
+        }
+
+        function renderWeather(data) {
+            const cur    = data.current;
+            const hourly = data.hourly;
+            const w      = wmo(cur.weather_code);
+            const label  = widget.dataset.label || 'Weather';
+
+            iconEl.className      = w[1];
+            tempEl.textContent    = Math.round(cur.temperature_2m) + '°';
+            nowTempEl.textContent = Math.round(cur.temperature_2m) + '°F';
+            locEl.textContent     = label;
+            descEl.textContent    = w[0];
+            humEl.textContent     = cur.relative_humidity_2m + '%';
+            windEl.textContent    = Math.round(cur.wind_speed_10m) + ' mph';
+
+            const nowIso = cur.time;
+            let startIdx = hourly.time.findIndex(t => t >= nowIso);
+            if (startIdx < 0) startIdx = 0;
+
+            const end = Math.min(startIdx + 24, hourly.time.length);
+            let html = '';
+            for (let i = startIdx; i < end; i++) {
+                const hw  = wmo(hourly.weather_code[i]);
+                const pop = hourly.precipitation_probability[i];
+                html += '<div class="weather-hour">' +
+                    '<span class="weather-hour-time">' + fmtHour(hourly.time[i]) + '</span>' +
+                    '<i class="' + hw[1] + '"></i>' +
+                    '<span class="weather-hour-temp">' + Math.round(hourly.temperature_2m[i]) + '°</span>' +
+                    (pop > 0 ? '<span class="weather-hour-pop">' + pop + '%</span>' : '') +
+                    '</div>';
+            }
+            forecastEl.innerHTML = html;
+
+            const now = new Date();
+            updatedEl.textContent = 'Updated ' +
+                now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
+
+            widget.style.display = '';
+        }
+
+        function fetchWeather() {
+            fetch('/api/weather')
+                .then(res => res.ok ? res.json() : null)
+                .then(data => { if (data && !data.error) renderWeather(data); })
+                .catch(() => {});
+        }
+
+        fetchWeather();
+        setInterval(fetchWeather, 3600000);
     }());
 </script>
 
