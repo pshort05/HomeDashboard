@@ -1,9 +1,8 @@
-Add Mac and Windows setup scripts; fix cross-platform Chrome history path
+Add search and auto-favicon to dashboard
 
-- setup.sh renamed to setup-linux.sh
-- setup-mac.sh: venv setup + optional launchd user agent (--service flag)
-  handles Homebrew Python on both Apple Silicon and Intel
-- setup-windows.ps1: venv setup for Windows; uses py/python3/python
-  launcher discovery; prints Task Scheduler guidance for auto-start
-- app.py: Chrome history path now resolved per platform (Linux, macOS,
-  Windows) instead of hardcoded Linux path
+- Search bar in the header filters links, cards, and sections as you
+  type; press / to focus, Escape to clear
+- Favicons loaded automatically from each site's /favicon.ico; FA icon
+  shown as fallback if the favicon fails to load
+- Flask origin template filter extracts the scheme+host from a link URL
+  for favicon requests

@@ -4,10 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ config.site.title }}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/static/fontawesome/css/all.min.css">
     <style>
         :root {
             --primary-rose: #b91d47;
@@ -24,8 +21,8 @@
             --gradient-primary: linear-gradient(135deg, var(--primary-rose), var(--moon-blue));
             --gradient-dark:    linear-gradient(135deg, var(--shadow-dark), var(--text-dark));
 
-            --font-primary:   'Playfair Display', serif;
-            --font-secondary: 'Inter', sans-serif;
+            --font-primary:   Georgia, 'Times New Roman', serif;
+            --font-secondary: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 
             --shadow-soft:   0 4px 6px rgba(0,0,0,0.10);
             --shadow-medium: 0 8px 25px rgba(0,0,0,0.15);
@@ -268,6 +265,60 @@
         }
 
         /* ── Responsive ──────────────────────────────────────── */
+        /* ── Search ──────────────────────────────────────────── */
+        .search-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: var(--radius);
+            color: var(--white);
+            padding: 0.4rem 1.8rem 0.4rem 0.75rem;
+            font-family: var(--font-secondary);
+            font-size: 0.85rem;
+            width: 200px;
+            outline: none;
+            transition: width var(--transition), background var(--transition), border-color var(--transition);
+        }
+
+        .search-input::placeholder { color: rgba(255,255,255,0.4); }
+
+        .search-input:focus {
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.5);
+            width: 260px;
+        }
+
+        .search-input::-webkit-search-cancel-button { display: none; }
+
+        .search-clear {
+            position: absolute;
+            right: 0.45rem;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.5);
+            cursor: pointer;
+            padding: 0.2rem;
+            font-size: 0.75rem;
+            display: none;
+            line-height: 1;
+        }
+
+        .search-clear:hover { color: var(--white); }
+
+        /* ── Favicon ─────────────────────────────────────────── */
+        .link-favicon {
+            width: 1.2rem;
+            height: 1.2rem;
+            object-fit: contain;
+            flex-shrink: 0;
+            border-radius: 2px;
+        }
+
         @media (max-width: 768px) {
             .site-header {
                 flex-direction: column;
@@ -281,6 +332,8 @@
             .main { padding: 1.5rem 1rem 2rem; }
             .panel { padding: 1.5rem 1rem 1.75rem; }
             .cards-grid { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1rem; }
+            .search-input { width: 140px; }
+            .search-input:focus { width: 180px; }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -302,6 +355,14 @@
         <div class="header-clock">
             <div class="clock-time" id="clock"></div>
             <div class="clock-date"  id="date"></div>
+        </div>
+        <div class="search-wrap">
+            <input type="search" id="site-search" class="search-input"
+                   placeholder="Search…" title="Press / to focus, Escape to clear"
+                   autocomplete="off" spellcheck="false">
+            <button class="search-clear" id="search-clear" title="Clear search">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
         </div>
         <a href="/edit" class="gear-btn" title="Edit Dashboard">
             <i class="fa-solid fa-gear"></i>
@@ -326,9 +387,17 @@
                 </div>
                 <div class="card-body">
                 {% for link in card.links %}
+                    {% set _origin = link.url | origin %}
                     <a href="{{ link.url if link.url.startswith(('http://', 'https://')) else '#' }}"
-                       class="link-item" target="_blank" rel="noopener">
-                        <i class="{{ link.icon }}"></i>{{ link.label }}
+                       class="link-item">
+                        {% if _origin %}
+                        <img src="{{ _origin }}/favicon.ico"
+                             class="link-favicon"
+                             onload="this.style.display='inline';this.nextElementSibling.style.display='none'"
+                             onerror="this.style.display='none'"
+                             style="display:none" width="16" height="16" alt="">
+                        {% endif %}
+                        <i class="{{ link.icon if link.icon else 'fa-solid fa-globe' }}"></i>{{ link.label }}
                     </a>
                 {% endfor %}
                 </div>
@@ -369,6 +438,68 @@
                 el.style.display = 'none';
             });
         }
+    }());
+</script>
+
+<script>
+    (function () {
+        const input = document.getElementById('site-search');
+        const clear = document.getElementById('search-clear');
+
+        function filter(q) {
+            q = q.trim().toLowerCase();
+            clear.style.display = q ? 'block' : 'none';
+
+            if (!q) {
+                document.querySelectorAll('.link-item, .card, .panel').forEach(function (el) {
+                    el.style.display = '';
+                });
+                return;
+            }
+
+            document.querySelectorAll('.card').forEach(function (card) {
+                const cardTitle = card.querySelector('.card-head h3').textContent.toLowerCase();
+                const cardMatches = cardTitle.includes(q);
+                let shown = 0;
+
+                card.querySelectorAll('.link-item').forEach(function (link) {
+                    const label = link.textContent.trim().toLowerCase();
+                    const href  = (link.getAttribute('href') || '').toLowerCase();
+                    const match = cardMatches || label.includes(q) || href.includes(q);
+                    link.style.display = match ? '' : 'none';
+                    if (match) shown++;
+                });
+
+                card.style.display = shown > 0 ? '' : 'none';
+            });
+
+            document.querySelectorAll('.panel').forEach(function (panel) {
+                const hasVisible = Array.from(panel.querySelectorAll('.card'))
+                    .some(function (c) { return c.style.display !== 'none'; });
+                panel.style.display = hasVisible ? '' : 'none';
+            });
+        }
+
+        input.addEventListener('input', function () { filter(this.value); });
+
+        clear.addEventListener('click', function () {
+            input.value = '';
+            filter('');
+            input.focus();
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
+                e.preventDefault();
+                input.focus();
+                input.select();
+            }
+            if (e.key === 'Escape' && document.activeElement === input) {
+                input.value = '';
+                filter('');
+                input.blur();
+            }
+        });
     }());
 </script>
 

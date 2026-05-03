@@ -72,6 +72,23 @@ echo "Installing dependencies..."
 "$VENV/bin/pip" install --quiet --upgrade pip
 "$VENV/bin/pip" install --quiet -r "$SCRIPT_DIR/requirements.txt"
 
+# ── Font Awesome (self-hosted) ────────────────────────────────────────────────
+
+FA_VERSION=6.5.1
+FA_DIR="$SCRIPT_DIR/homedashboard/static/fontawesome"
+if [[ ! -f "$FA_DIR/all.min.css" ]]; then
+    echo "Downloading Font Awesome $FA_VERSION..."
+    curl -fsSL "https://use.fontawesome.com/releases/v${FA_VERSION}/fontawesome-free-${FA_VERSION}-web.zip" \
+         -o /tmp/fa.zip
+    unzip -q /tmp/fa.zip -d /tmp/fa
+    mkdir -p "$FA_DIR/css"
+    cp "/tmp/fa/fontawesome-free-${FA_VERSION}-web/css/all.min.css" "$FA_DIR/css/"
+    cp -r "/tmp/fa/fontawesome-free-${FA_VERSION}-web/webfonts" "$FA_DIR/"
+    rm -rf /tmp/fa /tmp/fa.zip
+else
+    echo "Font Awesome already present."
+fi
+
 # ── Configuration ─────────────────────────────────────────────────────────────
 
 if [[ ! -f "$SCRIPT_DIR/config.json" ]]; then

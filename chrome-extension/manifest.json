@@ -1,0 +1,14 @@
+{
+    "manifest_version": 3,
+    "name": "HomeDashboard New Tab",
+    "version": "1.0",
+    "description": "Opens your HomeDashboard when you open a new tab.",
+    "chrome_url_overrides": {
+        "newtab": "newtab.html"
+    },
+    "permissions": ["storage"],
+    "options_ui": {
+        "page": "options.html",
+        "open_in_tab": true
+    }
+}

@@ -53,6 +53,25 @@ Write-Host "Installing dependencies..."
 & $Pip install --quiet --upgrade pip
 & $Pip install --quiet -r (Join-Path $ScriptDir 'requirements.txt')
 
+# ── Font Awesome (self-hosted) ────────────────────────────────────────────────
+
+$FaVersion = '6.5.1'
+$FaDir     = Join-Path $ScriptDir 'homedashboard\static\fontawesome'
+if (-not (Test-Path (Join-Path $FaDir 'all.min.css'))) {
+    Write-Host "Downloading Font Awesome $FaVersion..."
+    $FaZip = Join-Path $env:TEMP 'fa.zip'
+    $FaTmp = Join-Path $env:TEMP 'fa'
+    Invoke-WebRequest -Uri "https://use.fontawesome.com/releases/v$FaVersion/fontawesome-free-$FaVersion-web.zip" `
+        -OutFile $FaZip
+    Expand-Archive -Path $FaZip -DestinationPath $FaTmp -Force
+    New-Item -ItemType Directory -Force -Path (Join-Path $FaDir 'css') | Out-Null
+    Copy-Item (Join-Path $FaTmp "fontawesome-free-$FaVersion-web\css\all.min.css") (Join-Path $FaDir 'css')
+    Copy-Item (Join-Path $FaTmp "fontawesome-free-$FaVersion-web\webfonts") $FaDir -Recurse -Force
+    Remove-Item $FaZip, $FaTmp -Recurse -Force
+} else {
+    Write-Host "Font Awesome already present."
+}
+
 # ── Configuration ─────────────────────────────────────────────────────────────
 
 $ConfigFile = Join-Path $ScriptDir 'config.json'

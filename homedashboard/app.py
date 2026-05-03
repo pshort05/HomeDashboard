@@ -26,6 +26,17 @@ def _chrome_history_path() -> Path:
 CHROME_HISTORY = _chrome_history_path()
 
 
+@app.template_filter('origin')
+def origin_filter(url):
+    try:
+        p = urlparse(url)
+        if p.scheme in ('http', 'https') and p.netloc:
+            return f"{p.scheme}://{p.netloc}"
+    except Exception:
+        pass
+    return ''
+
+
 def load_config():
     with open(CONFIG_PATH, encoding='utf-8') as f:
         return json.load(f)

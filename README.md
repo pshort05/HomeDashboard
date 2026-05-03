@@ -9,6 +9,8 @@ A personal browser dashboard served from a Docker container on your local networ
 - In-browser editor at `/edit` for managing sections, cards, and links
 - Chrome history scanner: shows your top 100 most-visited sites with one-click add, plus a "Not in Top 100" list of dashboard sites absent from your history with a delete button
 - Live clock in the header
+- Per-user color scheme (Red, Blue, Green) and local items visibility, stored in the browser via `localStorage`
+- Chrome extension to override the new tab page
 
 ## Project Structure
 
@@ -20,10 +22,17 @@ HomeDashboard/
 │   └── templates/
 │       ├── index.html      # Dashboard view
 │       └── edit.html       # In-browser editor
+├── chrome-extension/       # Chrome extension — new tab override
+│   ├── manifest.json
+│   ├── newtab.html / newtab.js
+│   └── options.html / options.js
 ├── run.py                  # Entry point (local dev and Docker)
 ├── config.json             # Your personal config — gitignored
 ├── config.json.sample      # Starter template to copy
 ├── sync-history.sh         # Syncs Chrome history to the server
+├── setup-linux.sh          # Local install script (Linux)
+├── setup-mac.sh            # Local install script (macOS)
+├── setup-windows.ps1       # Local install script (Windows)
 ├── docker-compose.yml
 ├── Dockerfile
 └── requirements.txt
@@ -43,13 +52,28 @@ Edit `config.json` directly or use the in-browser editor at `/edit` after starti
 
 Suitable for development or for using the Chrome history scanner without a separate server (Chrome history is read directly — no sync needed).
 
-**Prerequisites:** Python 3.12+
+**Prerequisites:** Python 3.11+
+
+Run the setup script for your platform:
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-python run.py
+# Linux
+bash setup-linux.sh
+
+# macOS
+bash setup-mac.sh
+
+# Windows (PowerShell)
+.\setup-windows.ps1
+```
+
+The script creates `.venv/`, installs dependencies, and copies `config.json.sample` to `config.json` if no config exists yet. Each script also accepts a `--service` flag (Linux and macOS) to install and start a background service that runs automatically at login.
+
+To start manually after setup:
+
+```bash
+.venv/bin/python run.py      # Linux / macOS
+.venv\Scripts\python run.py  # Windows
 ```
 
 The dashboard is available at `http://localhost:8080`.
@@ -159,15 +183,43 @@ View logs:
 docker compose logs -f
 ```
 
-### 8. Set Chrome's home page
+### 8. Set Chrome's startup and home page
 
-In Chrome settings, set the home page and new tab page to:
+In Chrome settings, configure the following to point to your dashboard URL (e.g. `http://192.168.1.100:8888/`):
 
-```
-http://<server-ip>:<port>/
-```
+- **On startup:** Settings → On startup → Open a specific page → Add a new page
+- **Home button:** Settings → Appearance → Show home button → enter the URL
 
-Example: `http://192.168.1.100:8888/`
+For new tabs, see the Chrome Extension section below.
+
+## Chrome Extension
+
+Chrome's startup and home button settings only control what opens when Chrome launches or when you click the home button. Opening a new tab always shows Chrome's built-in new tab page unless you install an extension to override it.
+
+The `chrome-extension/` folder contains a Manifest V3 extension that replaces the new tab page with your dashboard.
+
+### Installation
+
+1. Open `chrome://extensions` in Chrome.
+2. Enable **Developer mode** using the toggle in the top-right corner.
+3. Click **Load unpacked** and select the `chrome-extension/` folder from this repository.
+
+The extension is now active. New tabs will open your dashboard immediately.
+
+### Configuring the URL
+
+The extension defaults to `http://localhost:8080/`. If your dashboard runs on a different address (e.g. a LAN server), update it:
+
+1. Go to `chrome://extensions`.
+2. Find **HomeDashboard New Tab** and click **Details**.
+3. Click **Extension options**.
+4. Enter your dashboard URL and click **Save**.
+
+### Updating the extension
+
+The extension reads from local files, so no reinstallation is needed after pulling new code. If you ever need to force a reload, click the circular reload button on the extension card in `chrome://extensions`.
+
+If the extension enters a broken state (the Details button disappears), remove it and load it again using **Load unpacked** — the reload button does not recover from a broken state.
 
 ## Configuration
 

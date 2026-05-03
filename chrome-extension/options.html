@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HomeDashboard — Extension Options</title>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #faf8f5;
+            color: #2c3e50;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.10);
+            padding: 2rem;
+            width: 420px;
+        }
+
+        h1 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #b91d47;
+        }
+
+        label {
+            display: block;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.4rem;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1.5px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            color: #2c3e50;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #b91d47;
+            box-shadow: 0 0 0 3px rgba(185,29,71,0.10);
+        }
+
+        button {
+            margin-top: 1rem;
+            padding: 0.5rem 1.25rem;
+            background: linear-gradient(135deg, #b91d47, #34495e);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        button:hover { opacity: 0.9; }
+
+        .status {
+            margin-top: 0.65rem;
+            font-size: 0.82rem;
+            color: #27ae60;
+            font-weight: 600;
+            min-height: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>HomeDashboard — New Tab Options</h1>
+        <label for="url">Dashboard URL</label>
+        <input type="text" id="url" placeholder="http://localhost:8080/">
+        <br>
+        <button id="save">Save</button>
+        <div class="status" id="status"></div>
+    </div>
+    <script src="options.js"></script>
+</body>
+</html>

@@ -4,10 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Settings</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/static/fontawesome/css/all.min.css">
     <style>
         :root {
             --primary-rose: #b91d47;
@@ -24,8 +21,8 @@
             --gradient-primary: linear-gradient(135deg, var(--primary-rose), var(--moon-blue));
             --gradient-dark:    linear-gradient(135deg, var(--shadow-dark), var(--text-dark));
 
-            --font-primary:   'Playfair Display', serif;
-            --font-secondary: 'Inter', sans-serif;
+            --font-primary:   Georgia, 'Times New Roman', serif;
+            --font-secondary: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 
             --shadow-soft:   0 4px 6px rgba(0,0,0,0.10);
             --shadow-medium: 0 8px 25px rgba(0,0,0,0.15);
@@ -377,6 +374,32 @@
             background: rgba(192,57,43,0.06);
         }
 
+        .btn-move {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.3rem 0.4rem;
+            background: transparent;
+            color: var(--circuit-gray);
+            border: 1.5px solid #ddd;
+            border-radius: var(--radius);
+            font-size: 0.72rem;
+            cursor: pointer;
+            transition: color var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast);
+            flex-shrink: 0;
+        }
+
+        .btn-move:hover:not(:disabled) {
+            color: var(--primary-rose);
+            border-color: var(--primary-rose);
+            background: rgba(185,29,71,0.06);
+        }
+
+        .btn-move:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
         /* ── FA hint ─────────────────────────────────────────── */
         .fa-hint {
             font-size: 0.72rem;
@@ -704,6 +727,29 @@
 
         .toggle-label { font-size: 0.88rem; color: var(--text-dark); }
 
+        /* ── Preferences action button ───────────────────────── */
+        .btn-pref {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            background: var(--gradient-primary);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius);
+            font-family: var(--font-secondary);
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+        }
+
+        .btn-pref:hover { box-shadow: var(--shadow-soft); transform: translateY(-1px); }
+
+        .btn-pref:active { transform: translateY(0); }
+
         /* ── Responsive ──────────────────────────────────────── */
         @media (max-width: 900px) {
             .edit-layout { grid-template-columns: 1fr; }
@@ -780,6 +826,19 @@
                             <span class="toggle-label">Show local items</span>
                         </label>
                         <p class="pref-hint">When off, internal sections are hidden on the dashboard.</p>
+                    </div>
+
+                    <div class="pref-group">
+                        <div class="pref-label">Chrome</div>
+                        <button class="btn-pref" onclick="setAsStartPage()">
+                            <i class="fa-brands fa-chrome"></i> Set as Start Page
+                        </button>
+                        <p class="pref-hint" id="start-page-hint" style="display:none">
+                            URL copied. In Chrome:<br><br>
+                            <strong>Startup</strong> &mdash; Settings &rarr; On startup &rarr; Open a specific page &rarr; paste<br><br>
+                            <strong>Home button</strong> &mdash; Settings &rarr; Appearance &rarr; Home button &rarr; paste<br><br>
+                            <strong>New tab</strong> &mdash; load the <code>chrome-extension/</code> folder as an unpacked extension in <code>chrome://extensions</code>
+                        </p>
                     </div>
 
                 </div>
@@ -913,6 +972,12 @@ function sectionHTML(s, si) {
       <option value="external" ${s.type === 'external' ? 'selected' : ''}>External (light)</option>
       <option value="internal" ${s.type === 'internal' ? 'selected' : ''}>Internal (dark)</option>
     </select>
+    <button class="btn-move" onclick="moveSection(${si},-1)" ${si === 0 ? 'disabled' : ''} title="Move up">
+      <i class="fa-solid fa-chevron-up"></i>
+    </button>
+    <button class="btn-move" onclick="moveSection(${si},1)" ${si === state.sections.length - 1 ? 'disabled' : ''} title="Move down">
+      <i class="fa-solid fa-chevron-down"></i>
+    </button>
     <button class="btn-remove" onclick="removeSection(${si})" title="Delete section">
       <i class="fa-solid fa-trash"></i>
     </button>
@@ -941,6 +1006,12 @@ function cardHTML(c, si, ci) {
     <input type="text" class="einput einput-card-title"
            value="${esc(c.title)}" placeholder="Card title"
            oninput="set('sections.${si}.cards.${ci}.title',this.value)">
+    <button class="btn-move" onclick="moveCard(${si},${ci},-1)" ${ci === 0 ? 'disabled' : ''} title="Move up">
+      <i class="fa-solid fa-chevron-up"></i>
+    </button>
+    <button class="btn-move" onclick="moveCard(${si},${ci},1)" ${ci === state.sections[si].cards.length - 1 ? 'disabled' : ''} title="Move down">
+      <i class="fa-solid fa-chevron-down"></i>
+    </button>
     <button class="btn-remove" onclick="removeCard(${si},${ci})" title="Delete card">
       <i class="fa-solid fa-trash"></i>
     </button>
@@ -1016,6 +1087,23 @@ function removeLink(si, ci, li) {
     rerenderLinks(si, ci);
 }
 
+function moveSection(si, dir) {
+    const target = si + dir;
+    if (target < 0 || target >= state.sections.length) return;
+    [state.sections[si], state.sections[target]] = [state.sections[target], state.sections[si]];
+    dirty = true;
+    renderSections();
+}
+
+function moveCard(si, ci, dir) {
+    const target = ci + dir;
+    if (target < 0 || target >= state.sections[si].cards.length) return;
+    [state.sections[si].cards[ci], state.sections[si].cards[target]] =
+        [state.sections[si].cards[target], state.sections[si].cards[ci]];
+    dirty = true;
+    rerenderCards(si);
+}
+
 /* ── Preferences ────────────────────────────────────────────────────────── */
 
 const THEMES = {
@@ -1038,6 +1126,17 @@ function applyTheme(name) {
 
 function applyShowLocal(enabled) {
     localStorage.setItem('showLocal', enabled ? '1' : '0');
+}
+
+function setAsStartPage() {
+    const url = window.location.origin + '/';
+    const hint = document.getElementById('start-page-hint');
+    navigator.clipboard.writeText(url).then(function() {
+        hint.style.display = 'block';
+    }).catch(function() {
+        // Clipboard API unavailable (non-HTTPS without localhost) — show hint anyway
+        hint.style.display = 'block';
+    });
 }
 
 /* ── Save ───────────────────────────────────────────────────────────────── */
