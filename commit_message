@@ -1,8 +1,4 @@
-Add search and auto-favicon to dashboard
+Add up/down reordering to links within cards
 
-- Search bar in the header filters links, cards, and sections as you
-  type; press / to focus, Escape to clear
-- Favicons loaded automatically from each site's /favicon.ico; FA icon
-  shown as fallback if the favicon fails to load
-- Flask origin template filter extracts the scheme+host from a link URL
-  for favicon requests
+- moveLink() mirrors moveSection/moveCard pattern
+- Up/down buttons disabled at list boundaries

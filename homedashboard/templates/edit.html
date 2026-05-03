@@ -684,6 +684,7 @@
         .swatch-red   { background: #b91d47; }
         .swatch-blue  { background: #1565c0; }
         .swatch-green { background: #1b7a3e; }
+        .swatch-grey  { background: #607d8b; }
 
         /* ── Toggle switch ───────────────────────────────────── */
         .toggle-row {
@@ -767,7 +768,7 @@
         }
     </style>
 <script>
-(function(){var T={red:{p:'#b91d47',g:'linear-gradient(135deg,#2d1b1b,#2c3e50)'},blue:{p:'#1565c0',g:'linear-gradient(135deg,#0d1b2e,#1e4578)'},green:{p:'#1b7a3e',g:'linear-gradient(135deg,#0d2218,#1a5c35)'}};var v=localStorage.getItem('theme')||'red';var c=T[v]||T.red;var r=document.documentElement;r.style.setProperty('--primary-rose',c.p);r.style.setProperty('--gradient-dark',c.g);}());
+(function(){var T={red:{p:'#b91d47',g:'linear-gradient(135deg,#2d1b1b,#2c3e50)'},blue:{p:'#1565c0',g:'linear-gradient(135deg,#0d1b2e,#1e4578)'},green:{p:'#1b7a3e',g:'linear-gradient(135deg,#0d2218,#1a5c35)'},grey:{p:'#607d8b',g:'linear-gradient(135deg,#1a1f25,#37474f)'}};var v=localStorage.getItem('theme')||'red';var c=T[v]||T.red;var r=document.documentElement;r.style.setProperty('--primary-rose',c.p);r.style.setProperty('--gradient-dark',c.g);}());
 </script>
 </head>
 <body>
@@ -813,6 +814,12 @@
                                        onchange="applyTheme('green')">
                                 <span class="color-swatch swatch-green"></span>
                                 <span>Green</span>
+                            </label>
+                            <label class="color-opt">
+                                <input type="radio" name="scheme" value="grey"
+                                       onchange="applyTheme('grey')">
+                                <span class="color-swatch swatch-grey"></span>
+                                <span>Grey</span>
                             </label>
                         </div>
                     </div>
@@ -1041,6 +1048,12 @@ function linkHTML(l, si, ci, li) {
   <input type="text" class="einput einput-link-url"
          value="${esc(l.url)}" placeholder="https://..."
          oninput="set('sections.${si}.cards.${ci}.links.${li}.url',this.value)">
+  <button class="btn-move" onclick="moveLink(${si},${ci},${li},-1)" ${li === 0 ? 'disabled' : ''} title="Move up">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+  <button class="btn-move" onclick="moveLink(${si},${ci},${li},1)" ${li === state.sections[si].cards[ci].links.length - 1 ? 'disabled' : ''} title="Move down">
+    <i class="fa-solid fa-chevron-down"></i>
+  </button>
   <button class="btn-remove" onclick="removeLink(${si},${ci},${li})" title="Delete link">
     <i class="fa-solid fa-times"></i>
   </button>
@@ -1104,12 +1117,22 @@ function moveCard(si, ci, dir) {
     rerenderCards(si);
 }
 
+function moveLink(si, ci, li, dir) {
+    const target = li + dir;
+    if (target < 0 || target >= state.sections[si].cards[ci].links.length) return;
+    [state.sections[si].cards[ci].links[li], state.sections[si].cards[ci].links[target]] =
+        [state.sections[si].cards[ci].links[target], state.sections[si].cards[ci].links[li]];
+    dirty = true;
+    rerenderLinks(si, ci);
+}
+
 /* ── Preferences ────────────────────────────────────────────────────────── */
 
 const THEMES = {
     red:   { primary: '#b91d47', gradient: 'linear-gradient(135deg,#2d1b1b,#2c3e50)' },
     blue:  { primary: '#1565c0', gradient: 'linear-gradient(135deg,#0d1b2e,#1e4578)' },
     green: { primary: '#1b7a3e', gradient: 'linear-gradient(135deg,#0d2218,#1a5c35)' },
+    grey:  { primary: '#607d8b', gradient: 'linear-gradient(135deg,#1a1f25,#37474f)' },
 };
 
 function applyTheme(name) {
