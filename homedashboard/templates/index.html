@@ -287,6 +287,9 @@
             .card, .link-item, .gear-btn { transition: none; }
         }
     </style>
+<script>
+(function(){var T={red:{p:'#b91d47',g:'linear-gradient(135deg,#2d1b1b,#2c3e50)'},blue:{p:'#1565c0',g:'linear-gradient(135deg,#0d1b2e,#1e4578)'},green:{p:'#1b7a3e',g:'linear-gradient(135deg,#0d2218,#1a5c35)'}};var v=localStorage.getItem('theme')||'red';var c=T[v]||T.red;var r=document.documentElement;r.style.setProperty('--primary-rose',c.p);r.style.setProperty('--gradient-dark',c.g);}());
+</script>
 </head>
 <body>
 
@@ -359,6 +362,13 @@
 
         tick();
         setInterval(tick, 1000);
+
+        var showLocal = localStorage.getItem('showLocal') !== '0';
+        if (!showLocal) {
+            document.querySelectorAll('.panel-internal').forEach(function(el) {
+                el.style.display = 'none';
+            });
+        }
     }());
 </script>
 

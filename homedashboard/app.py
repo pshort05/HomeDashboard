@@ -1,4 +1,6 @@
 import json
+import os
+import platform
 import shutil
 import sqlite3
 from collections import defaultdict
@@ -9,7 +11,19 @@ from flask import Flask, abort, jsonify, render_template, request
 
 app = Flask(__name__)
 CONFIG_PATH = Path(__file__).parent.parent / 'config.json'
-CHROME_HISTORY = Path.home() / '.config/google-chrome/Default/History'
+
+
+def _chrome_history_path() -> Path:
+    system = platform.system()
+    if system == 'Darwin':
+        return Path.home() / 'Library' / 'Application Support' / 'Google' / 'Chrome' / 'Default' / 'History'
+    if system == 'Windows':
+        local = os.environ.get('LOCALAPPDATA', '')
+        return Path(local) / 'Google' / 'Chrome' / 'User Data' / 'Default' / 'History'
+    return Path.home() / '.config' / 'google-chrome' / 'Default' / 'History'
+
+
+CHROME_HISTORY = _chrome_history_path()
 
 
 def load_config():
