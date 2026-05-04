@@ -1,3 +1,9 @@
+# Project-specific
+config.json
+chrome_history
+CLAUDE.md
+homedashboard/static/fontawesome/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

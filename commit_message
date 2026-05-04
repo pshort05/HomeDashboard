@@ -1,7 +1,6 @@
-Update README with weather configuration and minor corrections
+Add /health and /metrics endpoints
 
-- Add weather widget to features list
-- Add Weather subsection under Configuration explaining the Settings UI,
-  how to find coordinates, and how to disable the widget
-- Update site object example to include weather fields
-- Correct color scheme list (Grey was missing)
+- GET /health returns {"status":"OK"}
+- GET /metrics returns Prometheus text format (process, Python, GC metrics)
+- homedashboard_requests_total counter tracks method/endpoint/status via after_request hook
+- prometheus_client==0.21.1 added to requirements.txt

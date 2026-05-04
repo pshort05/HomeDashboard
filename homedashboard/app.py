@@ -9,7 +9,8 @@ from collections import defaultdict
 from pathlib import Path
 from urllib.parse import urlparse
 
-from flask import Flask, abort, jsonify, render_template, request
+from flask import Flask, abort, jsonify, render_template, request, Response
+from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
 
 app = Flask(__name__)
 CONFIG_PATH = Path(__file__).parent.parent / 'config.json'
@@ -96,6 +97,33 @@ def load_config():
 def save_config(data):
     with open(CONFIG_PATH, 'w', encoding='utf-8') as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
+
+
+_requests = Counter(
+    'homedashboard_requests_total',
+    'Total HTTP requests',
+    ['method', 'endpoint', 'status'],
+)
+
+
+@app.after_request
+def _track(response):
+    _requests.labels(
+        method=request.method,
+        endpoint=request.endpoint or 'unknown',
+        status=str(response.status_code),
+    ).inc()
+    return response
+
+
+@app.route('/health')
+def health():
+    return jsonify({'status': 'OK'})
+
+
+@app.route('/metrics')
+def metrics():
+    return Response(generate_latest(), mimetype=CONTENT_TYPE_LATEST)
 
 
 @app.route('/')
